@@ -4,6 +4,8 @@ from src.logical_layer import AutomationCycle
 from src.utils import Utils
 from src.logical_layer import DataManipulationPensionistas
 
+# import PySimpleGUI as sg
+
 
 def test_automation_cycle():
     """Test automation cycle"""
