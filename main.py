@@ -201,7 +201,7 @@ def gui_controller():
                             window_instance.refresh()
                             Utils.table_df_export_to_xlsx(
                                 execute_automation_cycle_result[0].get_dt_table(),
-                                f"data/output_{current_time}.xlsx",
+                                f"output_{current_time}.xlsx",
                             )
                             break
                         start_line = execute_automation_cycle_result[1] + 1
