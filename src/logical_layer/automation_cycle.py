@@ -1,8 +1,8 @@
 """Automation cycle class"""
 
+import time
 from tkinter import Tk
 import pyautogui as pg
-import time
 
 
 class AutomationCycle:
@@ -48,8 +48,6 @@ class AutomationCycle:
         # Click on search button
         pg.click(self.mouse_coordenates_list.pop(0))
 
-        pg.PAUSE = 1
-
         # Click on email field
         pg.click(self.mouse_coordenates_list.pop(0))
 
@@ -62,8 +60,6 @@ class AutomationCycle:
 
         # Move mouse to user button
         pg.moveTo(self.mouse_coordenates_list.pop(0))
-
-        pg.PAUSE = 1
 
         # Click on atualizar endereco eletronico button
         pg.click(self.mouse_coordenates_list.pop(0))

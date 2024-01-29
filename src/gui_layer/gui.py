@@ -18,11 +18,43 @@ class MakeWindow:
         sg.theme(self.theme)
 
         self.layout = [
-            [sg.Text("Selecione o arquivo de dados:")],
-            [sg.Input(), sg.FileBrowse()],
-            [sg.Text("Selecione o arquivo de coordenadas:")],
-            [sg.Input(), sg.FileBrowse()],
-            [sg.Submit(), sg.Cancel()],
+            [
+                sg.Text("Selecionar tipo de atualização", font=("", 14), pad=(10, 10)),
+                sg.Radio("Aposentados", "RADIO1", font=("", 14), pad=(10, 10)),
+                sg.Radio("Pensionistas", "RADIO1", font=("", 14), pad=(10, 10)),
+            ],
+            [sg.Text("Selecione o arquivo de dados:", font=("", 14), pad=(10, 10))],
+            [
+                sg.Input(key="data_file", font=("", 14), pad=(10, 10)),
+                sg.FileBrowse(font=("", 14), pad=(10, 10)),
+            ],
+            [
+                sg.Text(
+                    "Selecione o arquivo de coordenadas:", font=("", 14), pad=(10, 10)
+                )
+            ],
+            [
+                sg.Input(key="coordenates_file", font=("", 14), pad=(10, 10)),
+                sg.FileBrowse(font=("", 14), pad=(10, 10)),
+            ],
+            [
+                sg.Text("Atualizar a partir da linha:", font=("", 14), pad=(10, 10)),
+                sg.Input(
+                    key="start_line",
+                    size=(5, 1),
+                    default_text="1",
+                    justification="center",
+                    font=("", 14),
+                    pad=(10, 10),
+                ),
+            ],
+            [
+                sg.Text("Linha atual:", font=("", 14), pad=(10, 10)),
+                sg.Text("", key="current_line", font=("", 14), pad=(10, 10)),
+            ],
+            [sg.Text("", key="text_execucao", font=("", 14), pad=(10, 10))],
+            [sg.Submit("Executar", key="execute", font=("", 14), pad=(10, 10))],
+            [sg.Button("Sobre", key="about", font=("", 14), pad=(10, 10))],
         ]
 
         self.window = sg.Window(
@@ -32,7 +64,7 @@ class MakeWindow:
             right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT,
             keep_on_top=True,
             element_justification="c",
-            size=(700, 350),
+            size=(700, 520),
         )
 
         return self.window
