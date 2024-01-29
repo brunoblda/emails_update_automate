@@ -140,6 +140,7 @@ def gui_controller():
         if event == "execute":
             verify_entries_result = verify_entries(values)
             window_instance["text_execucao"].update(verify_entries_result[1])
+            window_instance.refresh()
             if verify_entries_result[0] is True:
                 automation_data_result = automation_data(values)
                 data_manipulation = automation_data_result[0]
@@ -161,7 +162,7 @@ def gui_controller():
                             automation_data_result[2],
                             start_line,
                         )
-                        if execute_automation_cycle_result[1] >= len(
+                        if execute_automation_cycle_result[1] + 1 >= len(
                             automation_data_result[1]
                         ):
                             window_instance["text_execucao"].update(
@@ -174,7 +175,7 @@ def gui_controller():
                             current_time = current_time.strftime("%Y-%m-%d %H_%M_%S")
                             Utils.table_df_export_to_xlsx(
                                 execute_automation_cycle_result[0].get_dt_table(),
-                                f"data/output_{current_time}.xlsx",
+                                f"output_{current_time}.xlsx",
                             )
                             window_instance.refresh()
                             break
