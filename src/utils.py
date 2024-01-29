@@ -1,4 +1,5 @@
 """Utils fuctions"""
+
 import os.path
 import pandas as pd
 
@@ -50,5 +51,5 @@ class Utils:
     @staticmethod
     def table_df_export_to_xlsx(df: pd.DataFrame, name_file: str) -> None:
         """Export dataframe to xlsx"""
-
+        name_file = f"./{name_file}"
         df.to_excel(name_file, index=False, engine="openpyxl")
