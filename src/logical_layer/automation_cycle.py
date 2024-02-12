@@ -2,11 +2,22 @@
 
 import time
 from tkinter import Tk
+from tkinter import TclError
 import pyautogui as pg
 
 
 class AutomationCycle:
     """Automation cycle class"""
+
+    _instance = None
+
+    @staticmethod
+    def get_instance():
+        """Sigleton pattern to get instance of the class"""
+
+        if not AutomationCycle._instance:
+            AutomationCycle._instance = AutomationCycle()
+        return AutomationCycle._instance
 
     def __init__(self) -> None:
         self.mouse_coordenates_list = None
@@ -25,10 +36,21 @@ class AutomationCycle:
 
         self.identification_value = identification_value
 
+    def set_email_value(self, email_value: str) -> None:
+        """Set email value"""
+
+        self.email_value = email_value
+
     def execute_automation_cycle(self) -> None:
         """Execute automation cycle"""
 
         time.sleep(2)
+
+        # Clean clipboard
+        root = Tk()
+        root.withdraw()
+        root.clipboard_clear()
+        root.update()
 
         # Click on radio select
         pg.click(self.mouse_coordenates_list.pop(0))
@@ -54,9 +76,16 @@ class AutomationCycle:
         # Copy email value
         with pg.hold("ctrl"):
             pg.press("c")
-        root = Tk()
-        root.withdraw()
-        self.email_value = root.clipboard_get()
+
+        # Time added to avoid clipboard reading error
+        time.sleep(0.5)
+
+        root.update()
+        try:
+            self.set_email_value(root.clipboard_get())
+        except TclError:
+            self.set_email_value("email_nao_cadastrado")
+        root.destroy()
 
         # Move mouse to user button
         pg.moveTo(self.mouse_coordenates_list.pop(0))

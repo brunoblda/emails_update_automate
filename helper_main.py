@@ -1,10 +1,10 @@
 """Main file for the project."""
 
+import PySimpleGUI as sg
 from src.logical_layer import AutomationCycle
 from src.utils import Utils
 from src.logical_layer import DataManipulationPensionistas
 from src.gui_layer import MakeWindow
-import PySimpleGUI as sg
 
 
 def test_automation_cycle():
@@ -23,7 +23,7 @@ def test_automation_cycle():
         print("File not found")
 
     # coordenates_mouse_path = 'data/coordenadas_mouse_aposentados.txt'
-    coordenates_mouse_path = "data/coordenadas_mouse_pensionistas.txt"
+    coordenates_mouse_path = "data/coordenadas_mouse_pens.txt"
 
     if Utils.validate_file_exist(coordenates_mouse_path):
         coordenates_list = Utils.mouse_coordenates_to_list(coordenates_mouse_path)
@@ -38,10 +38,11 @@ def test_automation_cycle():
 
     automation_cycle = AutomationCycle()
 
-    for i in range(0, 10):
+    for i in range(0, 3):
         automation_cycle.set_mouse_coordenates_list(coordenates_list_copy)
         automation_cycle.set_identification_value(str(matricula_list[i]))
         automation_cycle.execute_automation_cycle()
+        print(automation_cycle.get_email_value())
         table_df.set_value_if_different(
             matricula_list[i], automation_cycle.get_email_value()
         )
@@ -53,6 +54,7 @@ def test_automation_cycle():
 
 
 def show_gui():
+    """Show GUI window"""
     window_started = MakeWindow("DarkAmber").make_window()
     while True:
         event, values = window_started.read()
@@ -67,5 +69,5 @@ def show_gui():
 
 
 if __name__ == "__main__":
-    # test_automation_cycle()
-    show_gui()
+    test_automation_cycle()
+    # show_gui()
