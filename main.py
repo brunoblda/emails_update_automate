@@ -97,6 +97,9 @@ def about_text() -> str:
 
         Os e-mails são salvos em caixa alta.
 
+        Caso o servidor ou o pensionista não tenha um e-mail cadastrado o e-mail será salvo na planilha como:
+        "email_nao_cadastrado"
+
         Informações do sobre os dados:
 
             A coluna de referência para a atualização de e-mail dos aposentados é a coluna "CPF SERVIDOR".
