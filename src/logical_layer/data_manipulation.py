@@ -97,7 +97,6 @@ class DataManipulationPensionistas(DataManipulation):
             self.column_identification_name
         ].str.slice(-8)
 
-        print(dt_table_pensao_column.tolist())
         return dt_table_pensao_column.tolist()
 
     # set the value in the email column if the value is different
