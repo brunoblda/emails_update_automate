@@ -95,8 +95,9 @@ class DataManipulationPensionistas(DataManipulation):
 
         dt_table_pensao_column = self.dt_table[
             self.column_identification_name
-        ].str.slice(14)
+        ].str.slice(-8)
 
+        print(dt_table_pensao_column.tolist())
         return dt_table_pensao_column.tolist()
 
     # set the value in the email column if the value is different
@@ -109,7 +110,7 @@ class DataManipulationPensionistas(DataManipulation):
         if self.column_email_name not in self.dt_table.columns:
 
             self.dt_table.loc[
-                self.dt_table[self.column_identification_name].str.slice(14)
+                self.dt_table[self.column_identification_name].str.slice(-8)
                 == identification_value,
                 self.column_email_name,
             ] = email_value
@@ -117,7 +118,7 @@ class DataManipulationPensionistas(DataManipulation):
             # set the value in the email column if the value is different
             if (
                 self.dt_table.loc[
-                    self.dt_table[self.column_identification_name].str.slice(14)
+                    self.dt_table[self.column_identification_name].str.slice(-8)
                     == identification_value,
                     self.column_email_name,
                 ].values[0]
@@ -125,7 +126,7 @@ class DataManipulationPensionistas(DataManipulation):
             ):
 
                 self.dt_table.loc[
-                    self.dt_table[self.column_identification_name].str.slice(14)
+                    self.dt_table[self.column_identification_name].str.slice(-8)
                     == identification_value,
                     self.column_email_name,
                 ] = email_value
