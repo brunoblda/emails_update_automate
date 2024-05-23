@@ -46,7 +46,11 @@ class DataManipulationAposentados(DataManipulation):
     def get_identification_column_list(self) -> pd.DataFrame:
         """Get column cpf servidor"""
 
-        return self.dt_table["CPF SERVIDOR"].tolist()
+        dt_table_aposentados_column = self.dt_table[
+            self.column_identification_name
+        ].str.zfill(11)
+
+        return dt_table_aposentados_column.tolist()
 
     # set the value in the email column if the value is different
     def set_value_if_different(
