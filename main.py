@@ -80,7 +80,7 @@ def execute_automation_cycle(
 
     index_line = start_line
 
-    for i in range(index_line, index_line + 3):
+    for i in range(index_line, index_line + 10):
         if i >= len(identification_list):
             break
         automation_cycle.set_mouse_coordenates_list(coordenates_list_copy)
