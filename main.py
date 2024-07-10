@@ -18,7 +18,7 @@ def verify_entries(input_values):
     """Verify entries"""
 
     if input_values[0] is False and input_values[1] is False:
-        return (False, "Selecione uma opção.")
+        return (False, "Selecione o tipo de atualização.")
 
     if input_values["data_file"] == "":
         return (False, "Selecione o arquivo de dados.")
@@ -28,6 +28,14 @@ def verify_entries(input_values):
 
     if Utils.validate_file_exist(input_values["data_file"]) == "false":
         return (False, "Arquivo de dados não encontrado.")
+
+    if (
+        Utils.validate_column_exist(
+            input_values["data_file"], input_values["identification_column"]
+        )
+        is False
+    ):
+        return (False, "Coluna de identificação não encontrada.")
 
     if Utils.validate_file_exist(input_values["coordenates_file"]) == "false":
         return (False, "Arquivo de coordenadas não encontrado.")
@@ -41,17 +49,20 @@ def verify_entries(input_values):
 def automation_data(
     input_values,
 ) -> tuple[DataManipulation, DataFrame, list[tuple[int, int]]]:
-    """Automation data for automation cycle"""
-    table_df = Utils.read_data_to_df(input_values["data_file"])
+
+    column_identification_name = input_values["identification_column"]
+    table_df = Utils.read_data_to_df(
+        input_values["data_file"], column_identification_name
+    )
     atualization_type = "aposentados" if input_values[0] else "pensionistas"
     coordenates_data_list = Utils.mouse_coordenates_to_list(
         input_values["coordenates_file"]
     )
 
     if atualization_type == "aposentados":
-        table_df = DataManipulationAposentados(table_df)
+        table_df = DataManipulationAposentados(table_df, column_identification_name)
     else:
-        table_df = DataManipulationPensionistas(table_df)
+        table_df = DataManipulationPensionistas(table_df, column_identification_name)
 
     identification_list = table_df.get_identification_column_list()
 
@@ -69,7 +80,7 @@ def execute_automation_cycle(
 
     index_line = start_line
 
-    for i in range(index_line, index_line + 10):
+    for i in range(index_line, index_line + 3):
         if i >= len(identification_list):
             break
         automation_cycle.set_mouse_coordenates_list(coordenates_list_copy)
@@ -138,8 +149,18 @@ def gui_controller():
         event, values = window_instance.read()
         if event == sg.WIN_CLOSED:
             break
+        # Se o evento for 0, habilita a coluna de identificação e seta o valor para CPF SERVIDOR."""
+        if event == 0:
+            window_instance["identification_column"].update(disabled=False, value="CPF")
+        # Se o evento for 1, habilita a coluna de identificação e seta o valor para VÍNCULO PENSÃO (EDITADO)."""
+        if event == 1:
+            window_instance["identification_column"].update(
+                disabled=False, value="VÍNCULO PENSÃO (EDITADO)"
+            )
+        # Se o evento for about, abre a janela de informações sobre o sistema. """
         if event == "about":
             sg.popup("Sobre", about_text(), keep_on_top=True, font=("", 14))
+        # Se o evento for execute, executa a automação."""
         if event == "execute":
             verify_entries_result = verify_entries(values)
             window_instance["text_execucao"].update(verify_entries_result[1])
@@ -179,6 +200,8 @@ def gui_controller():
                             Utils.table_df_export_to_xlsx(
                                 execute_automation_cycle_result[0].get_dt_table(),
                                 f"output_{current_time}.xlsx",
+                                values["data_file"],
+                                values["identification_column"],
                             )
                             window_instance.refresh()
                             break
@@ -206,6 +229,8 @@ def gui_controller():
                             Utils.table_df_export_to_xlsx(
                                 execute_automation_cycle_result[0].get_dt_table(),
                                 f"output_{current_time}.xlsx",
+                                values["data_file"],
+                                values["identification_column"],
                             )
                             break
                         start_line = execute_automation_cycle_result[1] + 1

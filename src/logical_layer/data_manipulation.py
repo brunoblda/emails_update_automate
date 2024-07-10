@@ -3,14 +3,16 @@
 from abc import ABC, abstractmethod
 
 import pandas as pd
+import math
 
 
 class DataManipulation(ABC):
     """Data manipulation class"""
 
     # init method
-    def __init__(self) -> None:
+    def __init__(self, column_identification_name) -> None:
         self.column_email_name = "E-MAIL"
+        self.column_identification_name = column_identification_name
 
     # get column list of identification values
     @abstractmethod
@@ -48,9 +50,8 @@ class DataManipulationAposentados(DataManipulation):
     """Data manipulation class for aposentados"""
 
     # init method
-    def __init__(self, dt_table: pd.DataFrame) -> None:
-        super().__init__()
-        self.column_identification_name = "CPF SERVIDOR"
+    def __init__(self, dt_table: pd.DataFrame, column_identification_name) -> None:
+        super().__init__(column_identification_name)
         self.dt_table = self.identification_column_higienization(dt_table)
 
     def identification_column_higienization(self, dt_table) -> pd.DataFrame:
@@ -74,30 +75,37 @@ class DataManipulationAposentados(DataManipulation):
     ) -> None:
         """Set a data value for a specific column where 'CPF SERVIDOR' matches a given value"""
 
-        # set the value in the email column if the column does not exist
-        if self.column_email_name not in self.dt_table.columns:
-
-            self.dt_table.loc[
-                self.dt_table[self.column_identification_name] == identification_value,
-                self.column_email_name,
-            ] = email_value
-
+        # verify if the value is a string or a NaN value
+        if not isinstance(identification_value, str):
+            # verify if the value is a NaN value
+            if math.isnan(identification_value):
+                pass
         else:
-            # set the value in the email column if the value is different
-            if (
-                self.dt_table.loc[
-                    self.dt_table[self.column_identification_name]
-                    == identification_value,
-                    self.column_email_name,
-                ].values[0]
-                != email_value
-            ):
+            # set the value in the email column if the column does not exist
+            if self.column_email_name not in self.dt_table.columns:
 
                 self.dt_table.loc[
                     self.dt_table[self.column_identification_name]
                     == identification_value,
                     self.column_email_name,
                 ] = email_value
+
+            else:
+                # set the value in the email column if the value is different
+                if (
+                    self.dt_table.loc[
+                        self.dt_table[self.column_identification_name]
+                        == identification_value,
+                        self.column_email_name,
+                    ].values[0]
+                    != email_value
+                ):
+
+                    self.dt_table.loc[
+                        self.dt_table[self.column_identification_name]
+                        == identification_value,
+                        self.column_email_name,
+                    ] = email_value
 
     # get data table as dataframe
     def get_dt_table(self) -> pd.DataFrame:
@@ -111,17 +119,16 @@ class DataManipulationPensionistas(DataManipulation):
     """Data manipulation class for pensionistas"""
 
     # init method
-    def __init__(self, dt_table: pd.DataFrame) -> None:
-        super().__init__()
-        self.column_identification_name = "VÍNCULO PENSÃO (EDITADO)"
+    def __init__(self, dt_table: pd.DataFrame, column_identification_name) -> None:
+        super().__init__(column_identification_name)
         self.dt_table = self.identification_column_higienization(dt_table)
 
     def identification_column_higienization(self, dt_table) -> pd.DataFrame:
         """Higienize the identification column"""
 
-        dt_table[self.column_identification_name] = dt_table[
-            self.column_identification_name
-        ].str.slice(-8)
+        dt_table[self.column_identification_name] = (
+            dt_table[self.column_identification_name].str.slice(-8).str.zfill(8)
+        )
 
         return dt_table
 
@@ -137,29 +144,36 @@ class DataManipulationPensionistas(DataManipulation):
     ) -> None:
         """Set a data value for a specific column where 'VÍNCULO PENSÃO (EDITADO)' matches a given value"""
 
-        # set the value in the email column if the column does not exist
-        if self.column_email_name not in self.dt_table.columns:
-
-            self.dt_table.loc[
-                self.dt_table[self.column_identification_name] == identification_value,
-                self.column_email_name,
-            ] = email_value
+        # verify if the value is a string or a NaN value
+        if not isinstance(identification_value, str):
+            # verify if the value is a NaN value
+            if math.isnan(identification_value):
+                pass
         else:
-            # set the value in the email column if the value is different
-            if (
-                self.dt_table.loc[
-                    self.dt_table[self.column_identification_name]
-                    == identification_value,
-                    self.column_email_name,
-                ].values[0]
-                != email_value
-            ):
+            # set the value in the email column if the column does not exist
+            if self.column_email_name not in self.dt_table.columns:
 
                 self.dt_table.loc[
                     self.dt_table[self.column_identification_name]
                     == identification_value,
                     self.column_email_name,
                 ] = email_value
+            else:
+                # set the value in the email column if the value is different
+                if (
+                    self.dt_table.loc[
+                        self.dt_table[self.column_identification_name]
+                        == identification_value,
+                        self.column_email_name,
+                    ].values[0]
+                    != email_value
+                ):
+
+                    self.dt_table.loc[
+                        self.dt_table[self.column_identification_name]
+                        == identification_value,
+                        self.column_email_name,
+                    ] = email_value
 
     # get data table as dataframe
     def get_dt_table(self) -> pd.DataFrame:
